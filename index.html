@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FOA — brend va prototip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14110F;--surface:#1C1917;--surface2:#272220;--line:#332D2A;
+--text:#F5F1ED;--muted:#9A938E;--accent:#FF5A2B;--deep:#3A1F14;--r:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--ink);color:var(--text);font-family:Manrope,system-ui,sans-serif}
+body{min-height:100dvh}
+.hide{display:none!important}
+button{font-family:inherit;font-size:14px;color:var(--text);background:var(--surface2);border:0;border-radius:10px;padding:11px 14px;cursor:pointer;transition:filter .15s}
+button:hover{filter:brightness(1.18)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.primary{background:var(--accent);color:#fff;font-weight:700}
+.ghost{background:transparent;border:1px solid var(--line)}
+.wide{width:100%}
+.logo{display:flex;align-items:center;gap:4px;font-weight:800;letter-spacing:-.02em}
+.mark{border-radius:5px;background:var(--accent);display:inline-block}
+
+nav{position:sticky;top:0;z-index:20;background:rgba(20,17,15,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.navin{max-width:920px;margin:0 auto;padding:13px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.navin .logo{font-size:19px}.navin .mark{width:16px;height:16px}
+.nt{display:flex;gap:5px;flex-wrap:wrap}
+.nt button{background:transparent;font-size:13px;padding:8px 13px;color:var(--muted)}
+.nt button.on{background:var(--surface2);color:var(--text);font-weight:700}
+main{max-width:920px;margin:0 auto;padding:22px 16px 60px}
+h2{font-size:19px;font-weight:800;margin-bottom:5px;letter-spacing:-.01em}
+h3{font-size:14px;font-weight:700;margin:26px 0 10px}
+.lead{font-size:13.5px;color:var(--muted);line-height:1.65;margin-bottom:20px;max-width:56ch}
+.note{font-size:12.5px;color:var(--muted);line-height:1.65;margin-top:14px;max-width:60ch}
+.note b{color:var(--text);font-weight:500}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px}
+.grid{display:grid;gap:12px}
+.sw{border-radius:11px;height:74px;border:1px solid rgba(255,255,255,.07);cursor:pointer}
+.swn{font-size:12.5px;font-weight:700;margin-top:8px}
+.swh{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.phones{display:flex;gap:14px;flex-wrap:wrap}
+.ph{width:236px;background:var(--ink);border:1px solid var(--line);border-radius:24px;padding:15px 0 0;overflow:hidden}
+.ph.lt{background:#FAF8F5;border-color:#E5E0D8;color:#14110F}
+.php{padding:0 13px}
+.phc{font-size:11.5px;color:var(--muted);margin-top:9px;text-align:center}
+.tabbar{border-top:1px solid var(--line);display:flex;padding:10px 0 13px;margin-top:16px}
+.tb{flex:1;text-align:center;font-size:11px;color:var(--muted)}
+.tb.on{color:var(--accent);font-weight:700}
+.tb i{display:block;font-style:normal;font-size:16px;margin-bottom:3px}
+
+.flow{display:flex;flex-direction:column;gap:0}
+.fb{border:1px solid var(--line);border-radius:11px;padding:13px 15px;background:var(--surface)}
+.fb.w{border-color:#1D6E56;background:#0d211c}
+.fb.s{border-color:#534AB7;background:#171630}
+.fbt{font-size:13.5px;font-weight:700}
+.fbs{font-size:12px;color:var(--muted);margin-top:3px}
+.fa{height:18px;width:1px;background:var(--line);margin:0 auto}
+
+/* prototip */
+.app{max-width:420px;margin:0 auto}
+.drop{border:1.5px dashed var(--accent);border-radius:18px;background:var(--surface);padding:32px 18px;text-align:center;cursor:pointer;margin-bottom:10px}
+.drop:hover{background:var(--surface2)}
+.circ{width:50px;height:50px;border-radius:50%;background:var(--accent);display:grid;place-items:center;margin:0 auto 11px;font-size:25px;color:#fff;line-height:1}
+.h1{font-size:16px;font-weight:700}
+.sub{font-size:12.5px;color:var(--muted);margin-top:4px}
+.steps{margin-top:22px}
+.step{display:flex;align-items:center;gap:11px;padding:9px 0;font-size:13.5px;color:var(--muted)}
+.step.on{color:var(--text)}
+.dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex:none}
+.step.on .dot{border-color:var(--accent);background:var(--accent)}
+.track{height:5px;background:var(--surface2);border-radius:4px;overflow:hidden;margin:16px 0 8px}
+.fill{height:100%;width:0;background:var(--accent);transition:width .3s}
+.stage{position:relative;background:#000;border-radius:var(--r);overflow:hidden;margin-bottom:10px;display:flex;align-items:center;justify-content:center}
+.stage video{display:block;width:100%;max-height:46dvh;object-fit:contain;background:#000}
+.fake{width:100%;aspect-ratio:9/16;max-height:46dvh;background:radial-gradient(circle at 50% 38%,#231F1D,#0B0A09)}
+.ftag{position:absolute;top:11px;left:11px;font-size:11px;color:var(--muted);background:rgba(0,0,0,.5);padding:3px 9px;border-radius:20px}
+.cap{position:absolute;left:0;right:0;padding:0 7%;text-align:center;pointer-events:none;line-height:1.25}
+.cap .w{display:inline-block;margin:0 .16em}
+.row{display:flex;align-items:center;gap:8px}
+.between{justify-content:space-between}
+.time{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.scrub,.slider{-webkit-appearance:none;appearance:none;height:4px;border-radius:3px;background:var(--surface2);outline:0}
+.scrub{flex:1}.slider{width:100%}
+.scrub::-webkit-slider-thumb,.slider::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--accent);cursor:pointer}
+.scrub::-moz-range-thumb,.slider::-moz-range-thumb{width:15px;height:15px;border:0;border-radius:50%;background:var(--accent);cursor:pointer}
+.icobtn{background:transparent;padding:7px 9px;font-size:15px}
+.strip{position:relative;display:flex;gap:2px;height:40px;border-radius:10px;overflow:hidden;background:var(--surface);margin-bottom:8px}
+.blk{position:relative;background:var(--surface2);cursor:pointer;min-width:3px;flex-basis:0;transition:background .15s}
+.blk:hover{background:#3A3330}
+.blk.live{background:var(--accent)}
+.blk.gone{background:repeating-linear-gradient(45deg,var(--deep),var(--deep) 4px,transparent 4px,transparent 8px);opacity:.8}
+.head{position:absolute;top:0;bottom:0;width:2px;background:#fff;pointer-events:none;left:0;z-index:2}
+.legend{display:flex;gap:14px;font-size:11.5px;color:var(--muted);margin-bottom:12px;flex-wrap:wrap}
+.legend i{font-style:normal;display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;background:var(--surface2);font-size:12.5px;padding:8px 13px;border-radius:20px}
+.chip.on{background:var(--accent);color:#fff;font-weight:700}
+.panel{background:var(--surface);border-radius:var(--r);padding:12px;margin-bottom:10px}
+.lbl{font-size:12px;color:var(--muted);margin-bottom:7px}
+.seg{background:var(--surface);border-radius:11px;padding:9px 11px;margin-bottom:6px;border-left:3px solid transparent;cursor:pointer}
+.seg.live{border-left-color:var(--accent);background:var(--surface2)}
+.seg.gone{opacity:.4}.seg.gone .txt{text-decoration:line-through}
+.seg .top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:3px}
+.tm{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.txt{font-size:13.5px;line-height:1.5;outline:0;min-height:19px;word-break:break-word}
+.txt:focus{color:#fff}
+.x{background:transparent;padding:2px 6px;font-size:15px;color:var(--muted);line-height:1}
+textarea{width:100%;background:var(--surface2);border:1px solid var(--line);border-radius:10px;color:var(--text);font-family:inherit;font-size:13.5px;line-height:1.6;padding:11px;resize:vertical;min-height:110px;outline:0}
+textarea:focus{border-color:var(--accent)}
+.ptabs{display:flex;border-top:1px solid var(--line);margin-top:18px;padding-top:11px;gap:4px}
+.pt{flex:1;background:transparent;padding:8px 2px;font-size:11.5px;color:var(--muted);border-radius:9px}
+.pt.on{color:var(--accent);font-weight:700}
+.pt i{display:block;font-style:normal;font-size:17px;margin-bottom:3px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;background:var(--surface2);border:1px solid var(--line);padding:11px 17px;border-radius:11px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:50}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav><div class="navin">
+  <div class="logo">F<span class="mark"></span>A</div>
+  <div class="nt">
+    <button class="on" data-s="brand">Brend</button>
+    <button data-s="screens">Ekranlar</button>
+    <button data-s="flow">Sxema</button>
+    <button data-s="proto">Prototip</button>
+  </div>
+</div></nav>
+
+<main>
+
+<!-- ===== BREND ===== -->
+<section id="s-brand">
+  <h2>Brend</h2>
+  <p class="lead">Logotipdagi "O" harfi subtitr oynasiga aylangan — nom mahsulotni o'zi tushuntiradi. Ikonkada harf yo'q, faqat uch chiziq, shuning uchun 60px da ham tanilib turadi.</p>
+
+  <div class="card" style="display:flex;gap:34px;align-items:center;flex-wrap:wrap;background:#FAF8F5;border-color:#E5E0D8">
+    <div class="logo" style="font-size:56px;color:#14110F"><span>F</span><span class="mark" style="width:44px;height:44px;border-radius:13px;position:relative">
+      <span style="position:absolute;left:11px;top:13px;width:22px;height:5px;border-radius:3px;background:#fff"></span>
+      <span style="position:absolute;left:11px;top:25px;width:14px;height:5px;border-radius:3px;background:#fff"></span>
+    </span><span>A</span></div>
+    <div style="display:flex;gap:16px;align-items:flex-end">
+      <div style="width:84px;height:84px;border-radius:21px;background:#FF5A2B;position:relative">
+        <span style="position:absolute;left:22px;top:23px;width:40px;height:8px;border-radius:4px;background:#fff"></span>
+        <span style="position:absolute;left:22px;top:39px;width:26px;height:8px;border-radius:4px;background:#fff"></span>
+        <span style="position:absolute;left:22px;top:55px;width:34px;height:8px;border-radius:4px;background:#fff"></span>
+      </div>
+      <div style="width:44px;height:44px;border-radius:11px;background:#FF5A2B;position:relative">
+        <span style="position:absolute;left:12px;top:12px;width:20px;height:4px;border-radius:2px;background:#fff"></span>
+        <span style="position:absolute;left:12px;top:20px;width:13px;height:4px;border-radius:2px;background:#fff"></span>
+        <span style="position:absolute;left:12px;top:28px;width:17px;height:4px;border-radius:2px;background:#fff"></span>
+      </div>
+      <div style="width:28px;height:28px;border-radius:7px;background:#FF5A2B;position:relative">
+        <span style="position:absolute;left:7px;top:8px;width:13px;height:3px;border-radius:2px;background:#fff"></span>
+        <span style="position:absolute;left:7px;top:14px;width:8px;height:3px;border-radius:2px;background:#fff"></span>
+        <span style="position:absolute;left:7px;top:20px;width:11px;height:3px;border-radius:2px;background:#fff"></span>
+      </div>
+    </div>
+  </div>
+
+  <h3>Ranglar</h3>
+  <div class="grid" id="pal" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr))"></div>
+  <div class="note">Rang ustiga bosing — hex nusxalanadi. Apelsin rangni bitta ekranda faqat bitta elementda ishlating; hamma joyga sochsangiz urg'u yo'qoladi.</div>
+
+  <h3>Shrift</h3>
+  <div class="card">
+    <div style="font-size:27px;font-weight:800;letter-spacing:-.02em">Manrope 800 — sarlavha</div>
+    <div style="font-size:16px;font-weight:500;margin-top:7px">Manrope 500 — tugma va yorliq</div>
+    <div style="font-size:14px;color:var(--muted);margin-top:7px">Manrope 400 — asosiy matn</div>
+  </div>
+  <div class="note">Faqat shu uch qalinlik. Google Fonts'da bepul, lotin alifbosini to'liq qo'llab-quvvatlaydi.</div>
+</section>
+
+<!-- ===== EKRANLAR ===== -->
+<section id="s-screens" class="hide">
+  <h2>Ekranlar</h2>
+  <p class="lead">Qora fon — video ustidagi subtitrni ko'rish uchun. Pastdagi panelda ikonka va yozuv birga: faqat ikonka qo'yilsa odam taxmin qilishga majbur bo'ladi.</p>
+  <div class="phones">
+
+    <div>
+      <div class="ph">
+        <div class="php">
+          <div class="row between" style="margin-bottom:18px">
+            <div class="logo" style="font-size:17px"><span>F</span><span class="mark" style="width:14px;height:14px"></span><span>A</span></div>
+            <span style="font-size:11px;background:var(--surface2);color:var(--accent);padding:4px 10px;border-radius:12px">Pro</span>
+          </div>
+          <div style="background:var(--accent);border-radius:14px;padding:19px;text-align:center;margin-bottom:9px">
+            <div style="font-size:22px;color:#fff">+</div>
+            <div style="font-size:14px;font-weight:700;color:#fff;margin-top:3px">Yangi video</div>
+          </div>
+          <div style="background:var(--surface);border-radius:14px;padding:12px;text-align:center;font-size:12.5px;margin-bottom:18px">Telegramdan olish</div>
+          <div style="font-size:11.5px;color:var(--muted);margin-bottom:8px">So'nggi loyihalar</div>
+          <div class="row" style="gap:7px">
+            <div style="width:58px;height:78px;border-radius:9px;background:var(--surface2)"></div>
+            <div style="width:58px;height:78px;border-radius:9px;background:var(--surface2)"></div>
+            <div style="width:58px;height:78px;border-radius:9px;background:var(--surface2)"></div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tb on"><i>+</i>Yaratish</div><div class="tb"><i>▤</i>Loyihalar</div><div class="tb"><i>◯</i>Men</div>
+        </div>
+      </div>
+      <div class="phc">Bosh sahifa</div>
+    </div>
+
+    <div>
+      <div class="ph">
+        <div class="php">
+          <div class="row between" style="margin-bottom:13px">
+            <span style="font-size:17px">×</span>
+            <div class="row" style="gap:7px">
+              <span style="font-size:11.5px;background:var(--surface);padding:6px 10px;border-radius:8px">1080p</span>
+              <span style="font-size:12.5px;font-weight:700;background:var(--accent);color:#fff;padding:6px 13px;border-radius:8px">Eksport</span>
+            </div>
+          </div>
+          <div style="background:#000;border-radius:10px;height:122px;position:relative;margin-bottom:12px">
+            <div style="position:absolute;bottom:13px;left:0;right:0;text-align:center;font-size:11.5px;font-weight:700;color:#fff">bugun <span style="color:#14110F;background:var(--accent);padding:2px 6px;border-radius:4px">yangi</span> menyu</div>
+          </div>
+          <div style="display:flex;gap:2px;height:26px;border-radius:7px;overflow:hidden;margin-bottom:12px">
+            <div style="flex:2;background:var(--surface2)"></div>
+            <div style="flex:1;background:repeating-linear-gradient(45deg,var(--deep),var(--deep) 4px,transparent 4px,transparent 8px)"></div>
+            <div style="flex:3;background:var(--accent)"></div>
+            <div style="flex:2;background:var(--surface2)"></div>
+          </div>
+          <div style="background:var(--surface);border-radius:9px;padding:8px 10px;font-size:11.5px;color:var(--muted);margin-bottom:5px">Assalomu alaykum, do'stlar</div>
+          <div style="background:var(--surface2);border-left:3px solid var(--accent);border-radius:9px;padding:8px 10px;font-size:11.5px;margin-bottom:5px">Bugun yangi menyu bilan tanishtiramiz</div>
+          <div style="background:var(--surface);border-radius:9px;padding:8px 10px;font-size:11.5px;opacity:.45;text-decoration:line-through">Eee... shunaqa</div>
+        </div>
+        <div class="tabbar">
+          <div class="tb on"><i>≡</i>Matn</div><div class="tb"><i>◐</i>Uslub</div><div class="tb"><i>✂</i>Qirqish</div><div class="tb"><i>⇄</i>Tarjima</div>
+        </div>
+      </div>
+      <div class="phc">Muharrir</div>
+    </div>
+
+    <div>
+      <div class="ph" style="padding-bottom:15px">
+        <div class="php">
+          <div style="font-size:13.5px;font-weight:700;text-align:center;margin-bottom:13px">Ishlanmoqda</div>
+          <div style="background:#000;border-radius:10px;height:92px;margin-bottom:14px"></div>
+          <div style="height:5px;background:var(--surface2);border-radius:3px;margin-bottom:6px"><div style="width:68%;height:5px;background:var(--accent);border-radius:3px"></div></div>
+          <div style="font-size:11.5px;color:var(--muted);margin-bottom:16px">~18 soniya qoldi</div>
+          <div style="font-size:12px;margin-bottom:10px"><span style="color:var(--accent)">●</span> Ovoz ajratildi</div>
+          <div style="font-size:12px;margin-bottom:10px"><span style="color:var(--accent)">●</span> Nutq tanildi</div>
+          <div style="font-size:12px;margin-bottom:10px"><span style="color:var(--accent)">◐</span> Subtitr tayyorlanmoqda</div>
+          <div style="font-size:12px;color:var(--muted)"><span>○</span> Video render</div>
+        </div>
+      </div>
+      <div class="phc">Qayta ishlash</div>
+    </div>
+
+    <div>
+      <div class="ph" style="padding-bottom:15px">
+        <div class="php">
+          <div style="font-size:14px;font-weight:700;text-align:center">Tarif</div>
+          <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:14px">Istagan vaqt bekor qilasiz</div>
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px">
+            <div style="font-size:12px;font-weight:700">Bepul</div>
+            <div style="font-size:17px;font-weight:800;margin:2px 0 8px">0 so'm</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.7">3 ta video<br>2 daqiqagacha<br>FOA belgisi bilan</div>
+          </div>
+          <div style="background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:12px;margin-bottom:12px">
+            <div class="row between"><span style="font-size:12px;font-weight:700">Pro</span><span style="font-size:10.5px;background:var(--deep);color:var(--accent);padding:2px 8px;border-radius:10px">Ommabop</span></div>
+            <div style="font-size:17px;font-weight:800;margin:2px 0 8px">39 000 <span style="font-size:11px;color:var(--muted);font-weight:400">so'm / oy</span></div>
+            <div style="font-size:11px;line-height:1.7">30 ta video<br>Cheklovsiz uzunlik<br>Belgisiz, 4K</div>
+          </div>
+          <div style="background:var(--accent);color:#fff;font-weight:700;font-size:13px;border-radius:11px;padding:12px;text-align:center;margin-bottom:9px">Pro ga o'tish</div>
+          <div class="row" style="justify-content:center;gap:12px;font-size:11px;color:var(--muted)"><span>Payme</span><span>Click</span><span>Uzum</span></div>
+        </div>
+      </div>
+      <div class="phc">Tarif</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== SXEMA ===== -->
+<section id="s-flow" class="hide">
+  <h2>Ichki sxema</h2>
+  <p class="lead">Eng muhim joy — 4-bosqich. Preview brauzerda chiziladi, shuning uchun uslub o'zgarganda server ishlamaydi. Render faqat bir marta, yuklab olishda.</p>
+  <div class="flow" id="flowbox"></div>
+  <div class="note"><b>Kulrang</b> — foydalanuvchi tomoni · <b>Binafsha</b> — server · <b>Yashil</b> — worker</div>
+  <div class="note">Video serveringizdan o'tmasin — brauzer to'g'ridan-to'g'ri saqlashga yuklasin. Subtitrni ASS formatida yozing, rasm sifatida emas: ffmpeg uni to'g'ridan-to'g'ri tushunadi va render bir necha barobar tez ketadi.</div>
+</section>
+
+<!-- ===== PROTOTIP ===== -->
+<section id="s-proto" class="hide">
+  <h2>Prototip</h2>
+  <p class="lead">Ishlaydigan qism: jonli subtitr, so'zma-so'z animatsiya, timeline, matn orqali qirqish va SRT chiqarish. Nutqni matnga aylantirish va video render server talab qiladi — ular yo'q.</p>
+
+  <div class="app">
+    <div id="home">
+      <div class="drop" id="pick">
+        <div class="circ">+</div>
+        <div class="h1">Video tanlang</div>
+        <div class="sub">MP4, MOV, WebM</div>
+      </div>
+      <input type="file" id="file" accept="video/*" hidden>
+      <button class="ghost wide" id="demoBtn">Videosiz ko'rish — demo</button>
+      <div class="note">Videongiz hech qayerga yuborilmaydi — hammasi shu brauzer ichida.</div>
+    </div>
+
+    <div id="proc" class="hide">
+      <div class="h1" style="margin-top:14px">Ishlanmoqda</div>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <div class="time" id="eta">tayyorlanmoqda…</div>
+      <div class="steps">
+        <div class="step" id="s0"><span class="dot"></span>Video o'qildi</div>
+        <div class="step" id="s1"><span class="dot"></span>Ovoz ajratildi</div>
+        <div class="step" id="s2"><span class="dot"></span>Vaqt bo'limlari tayyorlandi</div>
+        <div class="step" id="s3"><span class="dot"></span>Muharrir ochilmoqda</div>
+      </div>
+    </div>
+
+    <div id="editor" class="hide">
+      <div class="stage" id="stage">
+        <video id="v" playsinline class="hide"></video>
+        <div class="fake hide" id="fake"></div>
+        <div class="ftag hide" id="ftag">demo · videosiz</div>
+        <div class="cap" id="cap"></div>
+      </div>
+      <div class="row between" style="margin-bottom:9px">
+        <button class="icobtn" id="play" aria-label="O'ynatish">▶</button>
+        <input type="range" class="scrub" id="scrub" min="0" max="1000" value="0" aria-label="Vaqt">
+        <span class="time" id="clock">0:00 / 0:00</span>
+      </div>
+      <div class="strip" id="strip"><div class="head" id="head"></div></div>
+      <div class="legend">
+        <span><i style="background:var(--accent)"></i>joriy</span>
+        <span><i style="background:var(--surface2)"></i>qoladi</span>
+        <span><i style="background:repeating-linear-gradient(45deg,var(--deep),var(--deep) 3px,transparent 3px,transparent 6px)"></i>o'chirilgan</span>
+      </div>
+
+      <div id="p-text">
+        <div class="row between" style="margin-bottom:9px">
+          <span class="lbl" style="margin:0">Matn qatorlari</span>
+          <div class="row">
+            <button class="ghost" id="addLine" style="font-size:12px;padding:7px 11px">+ qator</button>
+            <button class="ghost" id="paste" style="font-size:12px;padding:7px 11px">Matn joylash</button>
+          </div>
+        </div>
+        <div id="list"></div>
+        <div class="note">Qatorga bosing — o'sha joyga o'tasiz. × bosilsa qator o'chadi va o'ynaganda tashlab ketiladi.</div>
+      </div>
+
+      <div id="p-style" class="hide">
+        <div class="lbl">Uslub</div>
+        <div class="chips" id="styles"></div>
+        <div class="panel" style="margin-top:10px"><div class="lbl">O'lcham</div><input type="range" class="slider" id="size" min="34" max="90" value="56"></div>
+        <div class="panel"><div class="lbl">Joylashuv</div><input type="range" class="slider" id="pos" min="4" max="88" value="72"></div>
+      </div>
+
+      <div id="p-out" class="hide">
+        <button class="primary wide" id="srt" style="margin-bottom:9px">SRT faylini yuklab olish</button>
+        <button class="ghost wide" id="render" style="margin-bottom:9px">Videoni eksport qilish</button>
+        <button class="ghost wide" id="impBtn">SRT yuklash</button>
+        <input type="file" id="imp" accept=".srt,text/plain" hidden>
+        <div class="note">SRT <b>haqiqatan ishlaydi</b> — o'chirilgan qatorlar chiqmaydi, vaqtlar asl videoga mos.</div>
+      </div>
+
+      <div class="ptabs">
+        <button class="pt on" data-p="text"><i>≡</i>Matn</button>
+        <button class="pt" data-p="style"><i>◐</i>Uslub</button>
+        <button class="pt" data-p="out"><i>↓</i>Chiqarish</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._);t._=setTimeout(()=>t.classList.remove('on'),2100)};
+
+/* nav */
+$$('.nt button').forEach(b=>b.onclick=()=>{
+  $$('.nt button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  ['brand','screens','flow','proto'].forEach(s=>$('#s-'+s).classList.toggle('hide',s!==b.dataset.s));
+  scrollTo({top:0,behavior:'smooth'});
+  if(b.dataset.s==='proto')setTimeout(applyStyle,60);
+});
+
+/* palette */
+const PAL=[['Ink','#14110F'],['Accent','#FF5A2B'],['Accent soft','#FFE9E0'],['Surface','#FAF8F5'],['Muted','#8A8580']];
+$('#pal').innerHTML=PAL.map(([n,h])=>`<div><div class="sw" style="background:${h}" data-h="${h}"></div><div class="swn">${n}</div><div class="swh">${h}</div></div>`).join('');
+$$('.sw').forEach(el=>el.onclick=()=>{navigator.clipboard?.writeText(el.dataset.h);toast(el.dataset.h+' nusxalandi')});
+
+/* flow */
+const FLOW=[['1 · Video yuklash',"Brauzerdan to'g'ridan-to'g'ri saqlashga",''],
+['2 · API vazifa yaratadi',"Limitni tekshiradi, navbatga qo'yadi",'s'],
+['3 · ASR worker',"ffmpeg audio, Whisper, so'z taymingi",'w'],
+['4 · Brauzerda tahrirlash','Canvas preview, render qilinmaydi',''],
+['5 · Render worker','ffmpeg va ASS subtitr yozuvi','w'],
+['6 · Yuklab olish','Vaqtinchalik havola, 24 soat','']];
+$('#flowbox').innerHTML=FLOW.map(([t,s,c],i)=>
+ `<div class="fb ${c}"><div class="fbt">${t}</div><div class="fbs">${s}</div></div>`+(i<5?'<div class="fa"></div>':'')).join('');
+
+/* ===== prototip ===== */
+const v=$('#v'),cap=$('#cap'),list=$('#list');
+let segs=[],style='bold',url=null,demo=false,vt=0,vdur=0,playing=false,last=0;
+const STYLES={
+ bold:{name:'Bold',weight:800,color:'#fff',hl:'#fff',hlbg:'#FF5A2B',pad:'0 .12em',radius:'4px',shadow:'0 2px 12px rgba(0,0,0,.65)'},
+ karaoke:{name:'Karaoke',weight:800,color:'rgba(255,255,255,.4)',hl:'#FF5A2B',hlbg:'transparent',pad:'0 .12em',radius:'0',shadow:'0 2px 12px rgba(0,0,0,.65)'},
+ minimal:{name:'Minimal',weight:500,color:'#fff',hl:'#fff',hlbg:'rgba(0,0,0,.55)',pad:'.24em .5em',radius:'7px',shadow:'0 2px 10px rgba(0,0,0,.5)'},
+ pill:{name:'Pill',weight:700,color:'#fff',hl:'#14110F',hlbg:'#FF5A2B',pad:'.26em .62em',radius:'999px',shadow:'0 2px 10px rgba(0,0,0,.5)'}};
+const T=()=>demo?vt:(v.currentTime||0), D=()=>demo?vdur:(v.duration||0);
+const seek=x=>{const d=D();x=Math.max(0,Math.min(d,x));if(demo)vt=x;else v.currentTime=x};
+const fmt=s=>{s=Math.max(0,s||0);return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0')};
+const srtT=s=>{s=Math.max(0,s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=Math.floor(s%60),ms=Math.round(s%1*1000);
+ return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(x).padStart(2,'0')},${String(ms).padStart(3,'0')}`};
+const esc=s=>(s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+$('#pick').onclick=()=>$('#file').click();
+$('#file').onchange=e=>{const f=e.target.files[0];if(f)load(f)};
+$('#demoBtn').onclick=()=>{
+ demo=true;vdur=18;vt=0;
+ segs=[{s:0,e:2.6,t:"Assalomu alaykum, do'stlar",off:false},
+  {s:2.6,e:4.2,t:"Eee... shunaqa",off:true},
+  {s:4.2,e:7.4,t:"Bugun yangi menyu bilan tanishtiramiz",off:false},
+  {s:7.4,e:10.2,t:"Birinchisi — issiq kofe",off:false},
+  {s:10.2,e:11.6,t:"mmm, kutib turing",off:true},
+  {s:11.6,e:14.8,t:"Narxi hammaga qulay bo'ladi",off:false},
+  {s:14.8,e:18,t:"Kutamiz, manzil izohda",off:false}];
+ $('#fake').classList.remove('hide');$('#ftag').classList.remove('hide');
+ $('#home').classList.add('hide');$('#proc').classList.remove('hide');run();
+};
+function load(f){
+ demo=false;if(url)URL.revokeObjectURL(url);
+ url=URL.createObjectURL(f);v.src=url;v.classList.remove('hide');
+ $('#home').classList.add('hide');$('#proc').classList.remove('hide');
+ v.onloadedmetadata=()=>{build(v.duration||10);run()};
+ v.onerror=()=>{$('#proc').classList.add('hide');$('#home').classList.remove('hide');toast('Bu formatni brauzer ocholmadi')};
+}
+function build(dur){segs=[];const n=Math.max(3,Math.min(40,Math.round(dur/3)));
+ for(let i=0;i<n;i++)segs.push({s:+(i*dur/n).toFixed(2),e:+((i+1)*dur/n).toFixed(2),t:'',off:false})}
+function run(){let i=0;const tick=()=>{$('#s'+i).classList.add('on');$('#fill').style.width=((i+1)/4*100)+'%';
+ $('#eta').textContent=i<3?`~${(3-i)*2} soniya qoldi`:'tayyor';i++;i<4?setTimeout(tick,480):setTimeout(open,400)};setTimeout(tick,280)}
+function open(){$('#proc').classList.add('hide');$('#editor').classList.remove('hide');chips();draw();applyStyle()}
+
+function draw(){
+ list.innerHTML='';
+ segs.forEach((g,i)=>{
+  const d=document.createElement('div');
+  d.className='seg'+(g.off?' gone':'');d.dataset.i=i;
+  d.innerHTML=`<div class="top"><span class="tm">${fmt(g.s)} – ${fmt(g.e)}</span><button class="x">${g.off?'↺':'×'}</button></div>
+   <div class="txt" contenteditable="true" spellcheck="false">${esc(g.t)}</div>`;
+  d.querySelector('.x').onclick=e=>{e.stopPropagation();g.off=!g.off;draw()};
+  d.querySelector('.txt').oninput=e=>{g.t=e.target.textContent};
+  d.onclick=()=>seek(g.s+.02);
+  list.appendChild(d);
+ });
+ drawStrip();
+}
+function drawStrip(){
+ const s=$('#strip'),dur=D()||1;
+ s.querySelectorAll('.blk').forEach(e=>e.remove());
+ segs.forEach((g,i)=>{const b=document.createElement('div');
+  b.className='blk'+(g.off?' gone':'');b.style.flexGrow=Math.max(.03,(g.e-g.s)/dur);
+  b.dataset.i=i;b.title=fmt(g.s)+' – '+fmt(g.e);b.onclick=()=>seek(g.s+.02);s.appendChild(b)});
+}
+function mark(i){
+ $$('#list .seg').forEach(el=>el.classList.toggle('live',+el.dataset.i===i));
+ $$('#strip .blk').forEach(el=>el.classList.toggle('live',+el.dataset.i===i));
+}
+$('#addLine').onclick=()=>{const l=segs[segs.length-1],s=l?l.e:0,e=Math.min(D()||s+3,s+3);
+ segs.push({s:+s.toFixed(2),e:+e.toFixed(2),t:'',off:false});draw()};
+$('#paste').onclick=()=>{
+ const box=document.createElement('div');box.className='panel';
+ box.innerHTML=`<div class="lbl">Har bir qator alohida jumla. Vaqt teng bo'linadi.</div><textarea id="ta"></textarea>
+  <div class="row" style="margin-top:9px"><button class="primary" id="ok">Joylash</button><button class="ghost" id="no">Bekor</button></div>`;
+ list.replaceChildren(box);box.querySelector('#ta').focus();
+ box.querySelector('#no').onclick=draw;
+ box.querySelector('#ok').onclick=()=>{
+  const lines=box.querySelector('#ta').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  if(!lines.length){draw();return}
+  const dur=D()||lines.length*3,tot=lines.reduce((a,b)=>a+b.length,0)||1;let t=0;
+  segs=lines.map(l=>{const d=Math.max(.8,dur*l.length/tot),o={s:+t.toFixed(2),e:+(t+d).toFixed(2),t:l,off:false};t+=d;return o});
+  draw();toast(lines.length+' ta qator joylandi')};
+};
+function chips(){const c=$('#styles');c.innerHTML='';
+ Object.entries(STYLES).forEach(([k,s])=>{const b=document.createElement('button');
+  b.className='chip'+(k===style?' on':'');b.textContent=s.name;
+  b.onclick=()=>{style=k;chips();applyStyle()};c.appendChild(b)})}
+function applyStyle(){
+ const st=STYLES[style],w=$('#stage').clientWidth||360;
+ cap.style.fontSize=Math.round(w*$('#size').value/1000)+'px';
+ cap.style.fontWeight=st.weight;cap.style.textShadow=st.shadow;cap.style.top=$('#pos').value+'%';
+ paint(true);
+}
+$('#size').oninput=applyStyle;$('#pos').oninput=applyStyle;addEventListener('resize',applyStyle);
+function toggle(){if(demo){if(vt>=vdur)vt=0;playing=!playing;last=performance.now()}else{v.paused?v.play():v.pause()}
+ $('#play').textContent=(demo?playing:!v.paused)?'❚❚':'▶'}
+$('#play').onclick=toggle;
+v.onplay=()=>$('#play').textContent='❚❚';v.onpause=()=>$('#play').textContent='▶';
+$('#scrub').oninput=e=>{if(D())seek(e.target.value/1000*D())};
+addEventListener('keydown',e=>{if(e.code==='Space'&&!e.target.isContentEditable&&e.target.tagName!=='TEXTAREA'&&!$('#s-proto').classList.contains('hide')){e.preventDefault();toggle()}});
+
+let lastLive=-1;
+function paint(force){
+ const t=T(),st=STYLES[style];
+ const skip=segs.find(g=>g.off&&t>=g.s&&t<g.e-.06);
+ if(skip){seek(skip.e+.02);return}
+ const idx=segs.findIndex(g=>!g.off&&t>=g.s&&t<g.e&&g.t.trim());
+ if(idx===-1){if(lastLive!==-1||force){cap.innerHTML='';lastLive=-1;mark(-1)}return}
+ const g=segs[idx],words=g.t.trim().split(/\s+/);
+ const chars=words.reduce((a,b)=>a+b.length,0)||1,dur=Math.max(.2,g.e-g.s);
+ let acc=g.s;
+ cap.innerHTML=words.map(wd=>{const d=dur*wd.length/chars,on=t>=acc&&t<acc+d;acc+=d;
+  return `<span class="w" style="color:${on?st.hl:st.color};background:${on?st.hlbg:'transparent'};padding:${st.pad};border-radius:${st.radius}">${esc(wd)}</span>`}).join('');
+ if(idx!==lastLive){lastLive=idx;mark(idx)}
+}
+function loop(ts){
+ if(demo&&playing){vt+=(ts-last)/1000;last=ts;if(vt>=vdur){vt=vdur;playing=false;$('#play').textContent='▶'}}
+ const d=D();
+ if(d&&!$('#editor').classList.contains('hide')){
+  $('#scrub').value=Math.round(T()/d*1000)||0;
+  $('#clock').textContent=fmt(T())+' / '+fmt(d);
+  $('#head').style.left=(T()/d*100)+'%';
+  paint(false);
+ }
+ requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+$$('.pt').forEach(b=>b.onclick=()=>{$$('.pt').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+ ['text','style','out'].forEach(p=>$('#p-'+p).classList.toggle('hide',p!==b.dataset.p))});
+$('#srt').onclick=()=>{
+ const keep=segs.filter(g=>!g.off&&g.t.trim());
+ if(!keep.length){toast('Avval matn kiriting');return}
+ const txt=keep.map((g,i)=>`${i+1}\n${srtT(g.s)} --> ${srtT(g.e)}\n${g.t.trim()}\n`).join('\n');
+ const a=document.createElement('a');
+ a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));
+ a.download='foa-subtitr.srt';a.click();
+ setTimeout(()=>URL.revokeObjectURL(a.href),3000);toast(keep.length+' ta qator yuklandi')};
+$('#render').onclick=()=>toast('Buning uchun server kerak — 5-bosqich');
+$('#impBtn').onclick=()=>$('#imp').click();
+$('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+ r.onload=()=>{const p=parseSrt(r.result);if(!p.length){toast("SRT o'qilmadi");return}
+  segs=p;if(demo)vdur=Math.max(vdur,p[p.length-1].e);draw();$$('.pt')[0].click();toast(p.length+' ta qator yuklandi')};
+ r.readAsText(f,'utf-8')};
+function parseSrt(txt){const out=[];
+ txt.replace(/\r/g,'').split(/\n\n+/).forEach(blk=>{
+  const m=blk.match(/(\d{2}):(\d{2}):(\d{2})[,.](\d{1,3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})[,.](\d{1,3})/);
+  if(!m)return;
+  const s=+m[1]*3600+ +m[2]*60+ +m[3]+ +m[4]/1000, e=+m[5]*3600+ +m[6]*60+ +m[7]+ +m[8]/1000;
+  const ls=blk.split('\n'),t=ls.slice(ls.findIndex(l=>l.includes('-->'))+1).join(' ').trim();
+  if(t)out.push({s,e,t,off:false})});
+ return out}
+</script>
+</body>
+</html>
